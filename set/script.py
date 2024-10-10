@@ -932,27 +932,50 @@ for line in fileinput.input("txt_files/排序.txt", inplace=True):  #enter
  
  
 
-# enter
+#enter
+with open('txt_files/g.txt', 'r', encoding='utf-8') as file1:
+  
+    #enter
+    with open('txt_files/TT1.txt', 'w', encoding='utf-8') as file2:
+        #enter
+        for line in file1:
+            #enter
+            file2.write(line)
 
-# 定义关键词
-keywords = ['CCTV','CCTV欧','CCTV美','CETV', 'CF', 'IPT淘', 'CHC', 'IWA', '凤凰卫视', '星空', 'CHANNEL', 'W','卫视', 'X','Y']
-pattern = '|'.join(keywords)
 
-# 从 '排序.txt' 文件中读取并过滤符合条件的行，写入到 'T1.txt'
-with open('txt_files/排序.txt', 'r', encoding='utf-8') as file, open('txt_files/T1.txt', 'w', encoding='utf-8') as T1:
+#star#########################
+#enter#############################################################################################
+
+keywords = ['CCTV','CCTV欧','CCTV美','CETV', 'CF', 'IPT淘', 'CHC', 'IWA', '凤凰卫视', '星空', 'CHANNEL', 'W','卫视', 'X','Y']  #enter
+
+pattern = '|'.join(keywords)  #enter
+
+#pattern = r"^(.*?),(?!#genre#)(.*?)$" #enter
+
+with open('txt_files/排序.txt', 'r', encoding='utf-8') as file, open('txt_files/T1.txt', 'w', encoding='utf-8') as T1:    #####enter
+
     for line in file:
-        if re.search(pattern, line) and line.count(',') == 1:
-            T1.write(line)
 
-# 去除 'T1.txt' 中的空行
-for line in fileinput.input("txt_files/T1.txt", inplace=True):
-    print(line, end="")
+        if re.search(pattern, line) and line.count(',') == 1:  #enter
 
-# 向 'TT1.txt' 文件追加数据
-with open('txt_files/TT1.txt', 'a', encoding='utf-8') as TT1:
-    TT1.write('\n#shougong\n')
+         T1.write(line)  #enter
 
-# 自定义排序函数
+for line in fileinput.input("txt_files/T1.txt", inplace=True):  #enter 
+
+    print(line, end="")  #enter          
+
+#enter
+with open('txt_files/TT1.txt', 'a', encoding='utf-8') as TT1:    #####enter
+
+    TT1.write('\n#shougong\n')        
+ 
+    print(line, end="")  #enter 
+#enter
+
+#enter
+import re
+
+#enter
 def custom_sort_key(item):
     channel, url = item.split(',')
 
@@ -970,36 +993,59 @@ def custom_sort_key(item):
     else:
         sort_key = url
 
+    # enter
     if sort_key[0].isalpha():
-        sort_key = (0, sort_key)
+        sort_key = (0, sort_key)  # enter
     elif sort_key.isdigit():
-        sort_key = (1, -int(sort_key))
+        sort_key = (1, -int(sort_key))  #enter
     else:
         sort_key = (2, sort_key)
 
     return (channel_sort_key, sort_key)
 
-# 读取 'T1.txt' 中的数据，排序后写入到 'TT1.txt'
 with open('txt_files/T1.txt', 'r', encoding="utf-8") as input_file, open('txt_files/TT1.txt', 'a', encoding="utf-8") as output_file:
+    #enter
     lines = input_file.readlines()
+
+    #enter
     lines = [line.strip() for line in lines if line.strip()]
     
     sorted_data = sorted(lines, key=custom_sort_key)
 
+    #enter
     for channels in sorted_data: 
         output_file.write(f"{channels}\n")
+    sorted_data = sorted(lines, key=custom_sort_key)
 
-# 合并文件内容
+   #结束########################################################
+
+ ##################################################################################################################################SPLIT#
+
+#star#########################
+#enter#############################################################################################
+
+
+
+#starmerga多个文件到一个文件###########
+
 file_contents = []
-file_paths = ["txt_files/TT1.txt"]
+
+file_paths = ["txt_files/TT1.txt"] 
 
 for file_path in file_paths:
+
     with open(file_path, 'r', encoding="utf-8") as file:
+
         content = file.read()
+
         file_contents.append(content)
 
-# 写入到最终的 'AMER-start.txt' 文件
+
+
+# enter
+
 with open("txt_files/AMER-start.txt", "w", encoding="utf-8") as output:
+
     output.write('\n'.join(file_contents))
 
 #enter
@@ -1077,3 +1123,137 @@ with open('iptv.txt', 'w', encoding="utf-8") as file:
         file.write(merged_url)
 
 print("Processing complete")
+
+
+with open('iptv.txt', 'r', encoding="utf-8") as file:
+    lines = file.readlines()
+
+updated_lines = []
+for line in lines:
+    parts = line.strip().split(',', 1)
+    if len(parts) == 2:
+        name, urls = parts
+
+        url_list = urls.split('#')
+        if len(url_list) > 1:
+
+            url_list.pop(0)
+        updated_line = f"{name}, {'#'.join(url_list)}\n"
+        updated_lines.append(updated_line)
+
+with open('iptv.txt', 'w', encoding="utf-8") as file:
+    file.writelines(updated_lines)
+
+print("Processing complete: The first URL for each channel has been removed.")
+
+with open('iptv.txt', 'r', encoding="utf-8") as file:
+    lines = file.readlines()
+
+
+updated_lines = []
+for line in lines:
+    updated_line = line.replace('genre#', '#genre#')
+    updated_lines.append(updated_line)
+
+with open('iptv.txt', 'w', encoding="utf-8") as file:
+    file.writelines(updated_lines)
+
+print("Processing complete: # added before every genre#.")
+
+cctv_order = [
+    "CCTV1", "CCTV2", "CCTV3", "CCTV4", "CCTV4欧", "CCTV4美", "CCTV5", "CCTV5+", 
+    "CCTV6", "CCTV7", "CCTV8", "CCTV9", "CCTV10", "CCTV11", "CCTV12", "CCTV13", 
+    "CCTV14", "CCTV15", "CCTV16", "CCTV17", "兵器科技", "世界地理", "央视台球", 
+    "高尔夫网球", "风云足球", "第一剧场", "女性时尚", "风云音乐", "风云剧场", 
+    "文化精品", "怀旧剧场", "电视指南", "CETV1", "CETV2", "CETV4", "CETV5"
+]
+
+satellite_order = [
+    "湖南卫视", "浙江卫视", "江苏卫视", "东方卫视", "深圳卫视", "广东卫视", "广西卫视", 
+    "东南卫视", "厦门卫视", "海南卫视", "北京卫视", "河北卫视", "河南卫视", 
+    "湖北卫视", "江西卫视", "四川卫视", "重庆卫视", "贵州卫视", "云南卫视", 
+    "天津卫视", "安徽卫视", "山东卫视", "山东教育卫视", "辽宁卫视", "黑龙江卫视", 
+    "吉林卫视", "宁夏卫视", "山西卫视", "陕西卫视", "甘肃卫视", "青海卫视", 
+    "新疆卫视", "西藏卫视", "内蒙古卫视", "三沙卫视", "兵团卫视", "康巴卫视"
+]
+
+digital_order = [
+    "CHC家庭影院", "CHC动作电影", "CHC高清电影", "T淘电影", "T淘剧场", "T淘娱乐", 
+    "T淘贝比", "T淘萌宠", "凤凰卫视中文台", "凤凰卫视资讯台", "凤凰卫视电影台",
+    "星空卫视", "CHEV", "纪实人文", "纪实科教", "金鹰纪实", "求索记录", 
+    "欢笑剧场", "都市剧场", "生活时尚", "游戏风云", "乐游频道", "金色学堂", 
+    "动漫秀场", "卡酷少儿", "金鹰卡通", "优漫卡通", "哈哈炫动", "嘉佳卡通"
+]
+
+with open('iptv.txt', 'r', encoding="utf-8") as file:
+    lines = file.readlines()
+
+cctv_channels = []
+satellite_channels = []
+digital_channels = []
+
+other_lines = []
+current_category = None
+
+for line in lines:
+    stripped_line = line.strip()
+
+    if stripped_line.startswith("央视, #genre#"):
+        current_category = "cctv"
+        other_lines.append(stripped_line)
+    elif stripped_line.startswith("卫视, #genre#"):
+        current_category = "satellite"
+        other_lines.append(stripped_line)
+    elif stripped_line.startswith("数字, #genre#"):
+        current_category = "digital"
+        other_lines.append(stripped_line)
+    else:
+
+        if current_category == "cctv":
+            cctv_channels.append(stripped_line)
+        elif current_category == "satellite":
+            satellite_channels.append(stripped_line)
+        elif current_category == "digital":
+            digital_channels.append(stripped_line)
+        else:
+            other_lines.append(stripped_line)
+
+def sort_by_order(channel_list, order_list):
+    ordered_channels = []
+    unordered_channels = []
+    
+    for channel in channel_list:
+        name = channel.split(',')[0] 
+        if name in order_list:
+            ordered_channels.append((order_list.index(name), channel))
+        else:
+            unordered_channels.append(channel)
+    
+    ordered_channels.sort(key=lambda x: x[0])
+    return [channel[1] for channel in ordered_channels] + unordered_channels
+
+sorted_cctv = sort_by_order(cctv_channels, cctv_order)
+sorted_satellite = sort_by_order(satellite_channels, satellite_order)
+sorted_digital = sort_by_order(digital_channels, digital_order)
+
+final_output = []
+
+for line in other_lines:
+    if line == "央视, #genre#":
+        final_output.append(line)
+        final_output.extend(sorted_cctv)
+    elif line == "卫视, #genre#":
+        final_output.append(line)
+        final_output.extend(sorted_satellite)
+    elif line == "数字, #genre#":
+        final_output.append(line)
+        final_output.extend(sorted_digital)
+    else:
+        final_output.append(line)
+
+with open('iptv.txt', 'w', encoding="utf-8") as file:
+    file.write("\n".join(final_output))
+
+print("Processing complete and file updated.")
+
+
